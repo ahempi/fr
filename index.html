@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Framzösich lernen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #app {
+            text-align: center;
+        }
+        #score {
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        #question {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size : 20px;
+        }
+        .option {
+            margin-bottom: 5px;
+            background-color: gray;
+            display: block;
+        }
+        button {
+            margin-bottom: 10px;
+        }
+        #popup {
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            position: fixed;
+            width: 200px;
+            height: 50px;
+            top: 50%;
+            left: 50%;
+            margin-left: -100px; /* half of width */
+            margin-top: -50px; /* half of height */
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Framzösich lernen</h1>
+        <select id="dictionarySelect" onchange="changeDictionary()">
+            <option value="U1_L2">U1_L2</option>
+            <option value="U1_L3">U1_L3</option>
+            <!-- Add more dictionaries here... -->
+        </select>
+        <div id="score"></div>
+        <div id="question"></div>
+        <div id="options"></div>
+        <div></br></div>
+        <button onclick="nextQuestion()">überspringen</button>
+
+
+        <div id="popup"></div>
+    </div>
+
+    <script>
+        var dictionaries = {
+            U1_L2: {
+                "Ich stehe um 6,30 Uhr auf.": "Je me léve å 6h30",
+                "der Wecker": "le réveil",
+                "aufwachen, erwachen": "se réveiller",
+                "sich rasieren": "se raser",
+                "duschen": "se doucher",
+                "so schnell wie möglich": "aussi vite que possible",
+                "herumhängen, trödeln, herumlungen": "glander",       
+                "die Zeit, das Wetter": "le temps",
+                "Das Haus verlassen": "quitter la maison ",
+                "und": "et",
+                "Ich nehme den Bus.": "Je prends le bus.",
+                "zu spät (an)kommen": "arriver en retard",
+                "in der Schule, in die Schule": "å l'école (f)",
+                "der Kollege/die Kollegin": "le copain/la copine",
+                "es lustig haben, sich vergnügen": "s'amuser",
+                "auf den schulweg": "sur le chemin fe l'ecole",
+                "Ich bin locker, entspannt.": "Je suis relax.",
+                "zufrieden, erfreut, froh": "content/e",
+                "gestresst": "content/e",
+                "nervös": "nerveux/euse",
+                "genervt": "énervé/e",
+                "net": "gentil/gentille",
+                "Angst haben": "avoir peur",
+                "das/es ist schrecklich": "cëst horrible",
+                "in Panik geraten": "paniquer",
+                // Add more words here...
+            },
+            U1_L3: {
+                "Hello": "Hallo",
+                "Goodbye": "Auf Wiedersehen",
+                "Please": "Bitte",
+                "Thank you": "Danke",
+                "Yes": "Ja",
+                // Add more words here...
+            },
+            // Add more dictionaries here...
+        };
+
+        var currentDictionary = dictionaries.U1_L2;
+        var keys = Object.keys(currentDictionary);
+        var score = { correct: 0, wrong: 0 };
+
+        function changeDictionary() {
+            var select = document.getElementById('dictionarySelect');
+            currentDictionary = dictionaries[select.value];
+            keys = Object.keys(currentDictionary);
+            nextQuestion();
+        }
+
+        function showMessage(message, isCorrect) {
+            var popup = document.getElementById('popup');
+            
+             if (isCorrect) {
+                 popup.style.backgroundColor = 'green';
+             } else {
+                 popup.style.backgroundColor = 'red';
+             }
+
+             popup.textContent = message;
+             popup.style.display = 'block';
+             setTimeout(function() {
+                 popup.style.display = 'none';
+             }, 2000);
+         }
+
+         function nextQuestion() {
+             var english = keys[Math.floor(Math.random() * keys.length)];
+             var translation = currentDictionary[english];
+
+             document.getElementById('question').textContent = english;
+
+             var options = [translation];
+             while (options.length < 5) {
+                 var randomWord = currentDictionary[keys[Math.floor(Math.random() * keys.length)]];
+                 if (options.indexOf(randomWord) === -1) {
+                     options.push(randomWord);
+                 }
+             }
+
+             options.sort(function() { return 0.5 - Math.random(); });
+
+             var optionsDiv = document.getElementById('options');
+             optionsDiv.innerHTML = '';
+             
+              options.forEach(function(option) {
+                 var button = document.createElement('button');
+                 button.textContent = option;
+                 button.className = 'option';
+                 button.onclick = function() {
+                     if (option === translation) {
+                         score.correct++;
+                         showMessage('Correct!', true);
+                     } else {
+                         score.wrong++;
+                         showMessage('Falsch! Die Correcte Antwort ist: ' + translation, false);
+                     }
+                     document.getElementById('score').textContent =
+                         'Richtige antworten: ' + score.correct + ', Falsche Antworten: ' + score.wrong;
+                     nextQuestion();
+                 };
+                 optionsDiv.appendChild(button);
+              });
+          }
+
+          nextQuestion();
+      </script>
+  </body>
+  </html>
