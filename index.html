@@ -5,11 +5,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
+            /*display: flex;
+             justify-content: center;
             align-items: center;
+            padding: 20px;
+             */
             height: 100vh;
-            margin: 0;
+            margin: 20px;
         }
         #app {
             text-align: center;
@@ -22,14 +24,26 @@
             margin-bottom: 10px;
             font-weight: bold;
             font-size : 20px;
+
+        }
+        #options {
+            justify-content: center;
+            text-align: center;
+            /* width: 200px; */
+            /* display: block; */
+            /* margin-left: 50px; */
         }
         .option {
             margin-bottom: 5px;
             background-color: gray;
-            display: block;
-        }
+            /* display: block; */
+            justify-content: center;
+            text-align: center;
+        } 
         button {
             margin-bottom: 10px;
+            text-align: center;
+            justify-content: center;
         }
         #popup {
             font-weight: bold;
@@ -153,6 +167,7 @@
              optionsDiv.innerHTML = '';
              
               options.forEach(function(option) {
+                 var br = document.createElement('br');
                  var button = document.createElement('button');
                  button.textContent = option;
                  button.className = 'option';
@@ -169,6 +184,7 @@
                      nextQuestion();
                  };
                  optionsDiv.appendChild(button);
+                 optionsDiv.appendChild(br);
               });
           }
 
